@@ -25,6 +25,9 @@ export default defineConfig({
 	image: {
 		domains: ["webmention.io"],
 	},
+	redirects:{
+		'/posts/:slug': '/:year/:month/:day/:slug',
+	},
 	integrations: [
 		expressiveCode(expressiveCodeOptions),
 		icon(),
@@ -36,7 +39,7 @@ export default defineConfig({
 			name: siteConfig.title,
 			description: siteConfig.description,
 			lang: siteConfig.lang,
-			icon: "public/icon.svg", // the source for generating favicon & icons
+			icon: "public/mo.ico", // the source for generating favicon & icons
 			icons: [
 				{
 					src: "icons/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
@@ -83,7 +86,7 @@ export default defineConfig({
 		}),
 	},
 	vite: {
-		plugins: [tailwind(), rawFonts([".ttf", ".woff"])],
+		plugins: [tailwind(), rawFonts([".ttf", ".woff", ".woff2"])],
 	},
 	env: {
 		schema: {

@@ -2,26 +2,27 @@ import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
 import type { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
-	// ! Please remember to replace the following site property with your own domain, used in astro.config.ts
-	url: "https://astro-cactus.chriswilliams.dev/",
+	// ! 请记得将以下站点属性替换为您自己的域名，该属性在 astro.config.ts 中使用
+	url: "https://t1kdoor.cc.cd/",
 	/*
-		- Used to construct the meta title property found in src/components/BaseHead.astro L:11
-		- The webmanifest name found in astro.config.ts L:42
-		- The link value found in src/components/layout/Header.astro L:35
-		- In the footer found in src/components/layout/Footer.astro L:12
+		- 用于构建 src/components/BaseHead.astro 第 11 行的 meta 标题属性
+		- 用于 astro.config.ts 第 42 行的 webmanifest 名称
+		- 用于 src/components/layout/Header.astro 第 35 行的链接值
+		- 用于 src/components/layout/Footer.astro 第 12 行的页脚
 	*/
-	title: "Astro Cactus",
-	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
-	author: "Chris Williams",
-	// Used as the default description meta property and webmanifest description
+	title: "t1k's blog",
+	// 同时用作 meta 属性（位于 src/components/BaseHead.astro 第 31 行和第 49 行）
+	// 以及生成的 satori png 图片（位于 src/pages/og-image/[slug].png.ts）
+	author: "t1k",
+	// 用作默认的 description meta 属性和 webmanifest 描述
 	description: "An opinionated starter theme for Astro",
-	// HTML lang property, found in src/layouts/Base.astro L:18 & astro.config.ts L:48
-	lang: "en-GB",
-	// Meta property, found in src/components/BaseHead.astro L:42
-  ogLocale: "en_GB",
-  // Determines whether to show the logo in the templates header
+	// HTML 语言属性，位于 src/layouts/Base.astro 第 18 行和 astro.config.ts 第 48 行
+	lang: "zh-CN",
+	// Meta 属性，位于 src/components/BaseHead.astro 第 42 行
+  	ogLocale: "zh_CN",
+  	// 决定是否在模板页眉中显示 logo
 	showLogo: true,
-	// Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
+	// Date.prototype.toLocaleDateString() 的参数，位于 src/utils/date.ts
 	date: {
 		options: {
 			day: "numeric",
@@ -31,23 +32,30 @@ export const siteConfig: SiteConfig = {
 	},
 };
 
-// Used to generate links in both the Header & Footer.
+export const menu: string = "主页";
+export const posts: string = "文章";
+export const notes: string = "笔记";
+export const about: string = "关于";
+export const PinnedPosts: string = "置顶文章";
+// 用于在页眉（Header）和页脚（Footer）中生成链接。
 export const menuLinks: { path: string; title: string }[] = [
 	{
 		path: "/",
-		title: "Home",
+		title: menu,
 	},
-	{
-		path: "/about/",
-		title: "About",
-	},
+
 	{
 		path: "/posts/",
-		title: "Blog",
+		title: posts,
 	},
 	{
 		path: "/notes/",
-		title: "Notes",
+		title: notes,
+		
+	},
+	{
+		path: "/about/",
+		title: about,
 	},
 ];
 
@@ -66,17 +74,17 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 		uiLineHeight: "inherit",
 	},
 	themeCssSelector(theme, { styleVariants }) {
-		// If one dark and one light theme are available
-		// generate theme CSS selectors compatible with cactus-theme dark mode switch
+		// 如果配置了一深一浅两种主题
+		// 则会生成与 cactus-theme 深色模式切换兼容的 CSS 选择器
 		if (styleVariants.length >= 2) {
 			const baseTheme = styleVariants[0]?.theme;
 			const altTheme = styleVariants.find((v) => v.theme.type !== baseTheme?.type)?.theme;
 			if (theme === baseTheme || theme === altTheme) return `[data-theme='${theme.type}']`;
 		}
-		// return default selector
+		// 否则返回默认选择器
 		return `[data-theme="${theme.name}"]`;
 	},
-	// One dark, one light theme => https://expressive-code.com/guides/themes/#available-themes
+	// 一深一浅两种主题 => https://expressive-code.com/guides/themes/#available-themes
 	themes: ["dracula", "github-light"],
 	useThemedScrollbars: false,
 };

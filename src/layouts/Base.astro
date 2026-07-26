@@ -22,7 +22,7 @@ const {
 		<ThemeProvider />
 	</head>
 	<body
-		class="bg-global-bg text-global-text mx-auto flex min-h-screen max-w-3xl flex-col px-4 pt-16 font-mono text-sm font-normal antialiased sm:px-8"
+		class="bg-global-bg text-global-text mx-auto flex min-h-screen max-w-5xl flex-col px-4 pt-16 font-mono text-sm font-normal antialiased sm:px-8"
 	>
 		<SkipLink />
 		<Header />
@@ -52,3 +52,20 @@ const {
 		</script>
 	</body>
 </html>
+<style is:global>
+	@font-face {
+		font-family: "Cascadia Next SC";
+		/* 这里的路径对应 public/fonts/CascadiaNextSC.wght.woff2 */
+		src: url("/fonts/CascadiaNextSC.wght.woff2") format("woff2");
+		/* 文件名中的 wght 表示它是可变字体(Variable Font)，支持 100 到 900 的字重 */
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	/* 增加选择器权重，确保覆盖 Tailwind 默认的 font-mono */
+	body.font-mono {
+		font-family:
+			"Cascadia Next SC", "Cascadia Next", ui-monospace, SFMono-Regular, Consolas, monospace;
+	}
+</style>
