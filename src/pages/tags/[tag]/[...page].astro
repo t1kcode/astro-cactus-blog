@@ -58,7 +58,7 @@ const paginationProps = {
 				<a class="text-accent" href="/tags/">Tags</a>
 				<Icon aria-hidden="true" name="mdi:chevron-right" class="mx-1.5" />
 			</li>
-			<li aria-current="page" class=""><span aria-hidden="true">#</span>{tag}</li>
+			<li aria-current="page" class="">{tag}</li>
 		</ul>
 	</nav>
 	<h1 class="title capitalize">{tagMeta?.data.title ?? `Posts about ${tag}`}</h1>
