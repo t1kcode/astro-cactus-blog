@@ -39,7 +39,7 @@ export default defineConfig({
 			name: siteConfig.title,
 			description: siteConfig.description,
 			lang: siteConfig.lang,
-			icon: "public/mo.ico", // the source for generating favicon & icons
+			icon: "public/mo_512x512.png", // the source for generating favicon & icons
 			icons: [
 				{
 					src: "icons/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
