@@ -17,13 +17,7 @@ const {
 {
 	data.coverImage && (
 		<div class="mb-6 aspect-video">
-			<Image
-				alt={data.coverImage.alt}
-				layout="constrained"
-				width={960}
-				priority
-				src={data.coverImage.src}
-			/>
+			<Image alt={data.coverImage.alt} layout="constrained" inferSize src={data.coverImage.src} />
 		</div>
 	)
 }
