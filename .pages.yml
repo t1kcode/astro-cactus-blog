@@ -32,12 +32,14 @@ content:
         type: date
         required: true
         options:
-          format: YYYY-MM-DD HH:mm:ss
+          time: true
+          format: yyyy-MM-dd HH:mm:ss
       - name: updatedDate
         label: 更新日期
         type: date
         options:
-          format: YYYY-MM-DD HH:mm:ss
+          time: true
+          format: yyyy-MM-dd HH:mm:ss
       - name: categories
         label: 分类
         type: string
@@ -101,7 +103,8 @@ content:
         type: date
         required: true
         options:
-          format: YYYY-MM-DD HH:mm:ss
+          time: true
+          format: yyyy-MM-dd HH:mm:ss
       - name: body
         label: 正文
         type: rich-text
