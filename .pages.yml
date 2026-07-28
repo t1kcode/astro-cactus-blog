@@ -1,0 +1,126 @@
+# .pages.yml
+# Pages CMS 配置文件 - https://pagescms.org
+
+# 媒体配置：上传的文件存放在 public/media，URL 路径写入 /media
+media:
+  input: public/media
+  output: /media
+
+content:
+  # ━━ 文章集合 ━━
+  - name: posts
+    label: 文章
+    type: collection
+    path: content/posts
+    view:
+      fields: [title, publishDate, categories]
+      primary: title
+      sort: publishDate
+      default: descending
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: description
+        label: 描述
+        type: text
+        description: 用于 SEO，建议 50-160 个字符
+        required: true
+      - name: publishDate
+        label: 发布日期
+        type: date
+        required: true
+        options:
+          format: YYYY-MM-DD HH:mm:ss
+      - name: updatedDate
+        label: 更新日期
+        type: date
+        options:
+          format: YYYY-MM-DD HH:mm:ss
+      - name: categories
+        label: 分类
+        type: string
+        list: true
+        description: "例如：封档、质量文件"
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+        description: 小写，会自动去重
+      - name: coverImage
+        label: 封面图
+        type: object
+        fields:
+          - name: src
+            label: 图片
+            type: image
+          - name: alt
+            label: 替代文字
+            type: string
+      - name: ogImage
+        label: OG 社交分享图
+        type: string
+        description: 留空则自动生成 Satori OG 图
+      - name: draft
+        label: 草稿
+        type: boolean
+        default: false
+      - name: pinned
+        label: 置顶
+        type: boolean
+        default: false
+      - name: abbrlink
+        label: 永久链接缩写
+        type: string
+        description: 历史遗留字段，可留空
+      - name: body
+        label: 正文
+        type: rich-text
+
+  # ━━ 随记集合 ━━
+  - name: notes
+    label: 随记
+    type: collection
+    path: content/notes
+    view:
+      fields: [title, publishDate]
+      primary: title
+      sort: publishDate
+      default: descending
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: description
+        label: 描述
+        type: text
+      - name: publishDate
+        label: 发布日期
+        type: date
+        required: true
+        options:
+          format: YYYY-MM-DD HH:mm:ss
+      - name: body
+        label: 正文
+        type: rich-text
+
+  # ━━ 标签集合（为标签页提供介绍内容，可选）━━
+  - name: tags
+    label: 标签说明
+    type: collection
+    path: content/tags
+    view:
+      fields: [title]
+      primary: title
+    fields:
+      - name: title
+        label: 标题
+        type: string
+      - name: description
+        label: 描述
+        type: text
+      - name: body
+        label: 正文（标签页介绍）
+        type: rich-text
