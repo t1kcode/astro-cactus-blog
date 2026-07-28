@@ -15,7 +15,7 @@ publishDate: 2023-03-15 22:04:10
 
 ### 路由模式
 
-![](imagehttps://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
+![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
 |   标志   |     中文名     |    英文名    |                         描述                         |
 | :------: | :------------: | :----------: | :--------------------------------------------------: |
@@ -184,7 +184,7 @@ public class RabbitMqConfig
 
 **在RabbitMQ管理页面可以看到以下交换机和队列**
 
-![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png/RabbitMQ/自定义的交换机.jpg)
+![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
 ![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
@@ -341,7 +341,7 @@ public class OmsPortalOrderController
 
 > **已将延迟消息时间设置为30秒**
 
-![](imagehttps://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
+![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
 ![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
@@ -351,7 +351,7 @@ public class OmsPortalOrderController
 
 **这里以五种消息模式中的`路由模式`为例**
 
-![](imagehttps://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
+![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 |    标志    |      中文名       |    英文名    |                         描述                         |
 | :--------: | :---------------: | :----------: | :--------------------------------------------------: |
 |   **P**    |    **生产者**     | **Producer** |       **消息的发送者，可以将消息发送到交换机**       |
@@ -371,7 +371,7 @@ public class OmsPortalOrderController
 
 ##### 模式示意图
 
-![](imagehttps://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
+![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
 ##### Sping AMQP实现
 
