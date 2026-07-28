@@ -13,30 +13,32 @@ const baseSchema = z.object({
 });
 
 const post = defineCollection({
-	loader: glob({ base: "./content/posts", pattern: "**/*.{md,mdx}" }),
-	schema: ({ image }) =>
-		baseSchema.extend({
-			description: z.string(),
-			categories: z.array(z.string()).default([]),  // 新增
-			coverImage: z
-				.object({
-					alt: z.string(),
-					src: image(),
-				})
-				.optional(),
-			draft: z.boolean().default(false),
-			ogImage: z.string().optional(),
-			tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
-			publishDate: z
-				.string()
-				.or(z.date())
-				.transform((val) => new Date(val)),
-			updatedDate: z
-				.string()
-				.optional()
-				.transform((str) => (str ? new Date(str) : undefined)),
-			pinned: z.boolean().default(false),
-		}),
+    loader: glob({ base: "./content/posts", pattern: "**/*.{md,mdx}" }),
+    schema: () =>
+        baseSchema.extend({
+            description: z.string(),
+            categories: z.array(z.string()).default([]),
+            // 改为 z.string() 接受远程 CDN URL，也可处理 Pages CMS 清空时写入的空字符串
+            coverImage: z
+                .object({
+                    alt: z.string(),
+                    src: z.string(),
+                })
+                .optional(),
+            draft: z.boolean().default(false),
+            ogImage: z.string().optional(),
+            tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+            publishDate: z
+                .string()
+                .or(z.date())
+                .transform((val) => new Date(val)),
+            updatedDate: z
+                .string()
+                .or(z.date())
+                .optional()
+                .transform((val) => (val ? new Date(val) : undefined)),
+            pinned: z.boolean().default(false),
+        }),
 });
 
 const note = defineCollection({

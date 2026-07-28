@@ -1,7 +1,6 @@
 # .pages.yml
 # Pages CMS 配置文件 - https://pagescms.org
 
-# 媒体配置：上传的文件存放在 public/media，URL 路径写入 /media
 media:
   input: public/media
   output: /media
@@ -53,10 +52,12 @@ content:
       - name: coverImage
         label: 封面图
         type: object
+        description: 填入 CDN 图片链接，留空则不显示封面
         fields:
           - name: src
-            label: 图片
-            type: image
+            label: 图片 URL
+            type: string
+            description: 例如 https://cdn.jsdmirror.com/gh/...
           - name: alt
             label: 替代文字
             type: string
@@ -109,7 +110,7 @@ content:
         label: 正文
         type: rich-text
 
-  # ━━ 标签集合（为标签页提供介绍内容，可选）━━
+  # ━━ 标签集合 ━━
   - name: tags
     label: 标签说明
     type: collection
