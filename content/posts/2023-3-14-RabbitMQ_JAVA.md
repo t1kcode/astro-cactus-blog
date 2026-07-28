@@ -586,7 +586,7 @@ public class Customer3
 
 **Topic类型的Exchange与Direct相比，都是可以根据RoutingKey把消息路由到不同的队列，只不过Topic类型Exchange可以让队列在绑定RoutingKey的时候使用统配符。这种模型RoutingKey一般都是由一个或多个单词组成，多个单词之间以"."分割，例如：item.insert**
 
-![](imagehttps://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
+![](https://cdn.jsdmirror.com/gh/t1kcode/image@master/%E5%B7%B2%E5%A4%B1%E6%95%88/2026/07/25/50d9734a39-%E5%B7%B2%E5%A4%B1%E6%95%88.png)
 
 > **# 通配符**
 >
