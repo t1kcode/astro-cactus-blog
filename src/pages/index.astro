@@ -132,7 +132,7 @@ const latestGroups = groupByDate(latestPosts);
 				<ul class="space-y-6" role="list">
 					{latestNotes.map((note) => (
 						<li>
-							<Note note={note} as="h3" isPreview />
+							<Note note={note} as="h3" isPreview previewLines={2} />
 						</li>
 					))}
 				</ul>

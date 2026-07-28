@@ -6,9 +6,10 @@ import FormattedDate from "@/components/FormattedDate.astro";
 type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
 	note: CollectionEntry<"note">;
 	isPreview?: boolean | undefined;
+	previewLines?: number | undefined; // 新增
 };
 
-const { as: Tag = "div", note, isPreview = false } = Astro.props;
+const { as: Tag = "div", note, isPreview = false, previewLines = 6 } = Astro.props;
 const { Content } = await render(note);
 ---
 
@@ -19,11 +20,15 @@ const { Content } = await render(note);
 	<Tag class="title" class:list={{ "text-base": isPreview }}>
 		{
 			isPreview ? (
-				<a class="cactus-link" href={`/notes/${note.id}/`}>
+				<a
+					class="cactus-link transition-colors duration-200 hover:text-[#2bbc8a]"
+					href={`/notes/${note.id}/`}
+				>
+					<span class="text-red-500" />
 					{note.data.title}
 				</a>
 			) : (
-				<>{note.data.title}</>
+				<h1 class="masthead_title mb-1">{note.data.title}</h1>
 			)
 		}
 	</Tag>
@@ -39,7 +44,7 @@ const { Content } = await render(note);
 	/>
 	<div
 		class="prose prose-sm prose-cactus mt-4 max-w-none [&>p:last-of-type]:mb-0"
-		class:list={{ "line-clamp-6": isPreview }}
+		class:list={[isPreview && `line-clamp-${previewLines}`]}
 	>
 		<Content />
 	</div>

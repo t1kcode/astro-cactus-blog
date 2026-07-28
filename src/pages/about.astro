@@ -1,35 +1,96 @@
 ---
 import PageLayout from "@/layouts/Base.astro";
+import { Icon } from "astro-icon/components";
 
 const meta = {
-	description: "I'm a starter theme for Astro.build",
-	title: "About",
+	description: "t1k 的个人介绍 - 制造业质量工程师，热衷把工程工具融入日常质量工作",
+	title: "关于",
 };
+
+// 技能/领域
+const skillItems = [
+	{
+		icon: "mdi:clipboard-check-outline",
+		title: "质量管理",
+		desc: "制程管控、不合格品分析与持续改进",
+	},
+	{
+		icon: "mdi:chart-line",
+		title: "数据驱动",
+		desc: "用统计方法与可视化理解质量波动",
+	},
+	{
+		icon: "mdi:tools",
+		title: "工程工具",
+		desc: "在传统行业里用脚本提升日常效率",
+	},
+	{
+		icon: "mdi:book-open-variant",
+		title: "技术分享",
+		desc: "记录跨界实践与工具落地的心得",
+	},
+];
 ---
 
 <PageLayout meta={meta}>
-	<div class="prose prose-sm prose-cactus max-w-none">
-		<p>
-			Hi, I’m a starter Astro. I’m particularly great for getting you started with your own blogging
-			website.
-		</p>
-		<p>Here are my some of my awesome built in features:</p>
-		<ul class="list-inside list-disc" role="list">
-			<li>I'm ultra fast as I'm a static site</li>
-			<li>I'm fully responsive</li>
-			<li>I come with a light and dark mode</li>
-			<li>I'm easy to customise and add additional content</li>
-			<li>I have Tailwind CSS styling</li>
-			<li>Shiki code syntax highlighting</li>
-			<li>Satori for auto generating OG images for blog posts</li>
-		</ul>
-		<p>
-			Clone or fork my <a
-				class="cactus-link inline-block"
-				href="https://github.com/chrismwilliams/astro-cactus"
-				rel="noreferrer"
-				target="_blank">repo</a
-			> if you like me!
-		</p>
+	<div class="flex flex-col gap-12 pb-12">
+		{/* ① Hero 区 */}
+		<section class="flex flex-col gap-6">
+			<p class="text-muted max-w-2xl text-base leading-relaxed">
+				Hi，我是 t1k。一名制造业的质量工程师，相信
+				<span class="text-global-text font-semibold">数据 + 良好工具</span>
+				能让质量工作更可靠也更轻松。这个博客是我记录日常所见、所学、所造的地方。
+			</p>
+		</section>
+
+		<hr class="border-muted/30 border-t border-dashed" />
+
+		{/* ② 领域 & 栈 —— 横向列表 */}
+		<section class="flex flex-col gap-4">
+			<h2 class="text-accent-2 text-base font-semibold">领域 & 栈</h2>
+			<ul class="flex flex-wrap gap-x-6 gap-y-3">
+				{
+					skillItems.map(({ icon, title, desc }) => (
+						<li class="flex items-start gap-2">
+							<Icon name={icon} class="text-accent mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+							<div class="flex flex-col">
+								<span class="text-accent-2 text-sm font-bold">{title}</span>
+								<span class="text-muted text-xs leading-relaxed">{desc}</span>
+							</div>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<hr class="border-muted/30 border-t border-dashed" />
+
+		{/* ③ 关于本站 */}
+		<section class="prose prose-sm prose-cactus max-w-none">
+			<p>
+				本站由 <a class="cactus-link" href="https://astro.build" rel="noreferrer" target="_blank"
+					>Astro</a
+				>
+				驱动，是一个追求速度与阅读体验的静态博客。
+			</p>
+			<p>这里写的内容，多半围绕三种问题展开：</p>
+			<ul class="list-inside list-disc" role="list">
+				<li>
+					<strong>传统行业的数字化现实</strong> —— 质量工作如何在纸面、Excel 与系统之间找到合理的节奏
+				</li>
+				<li><strong>把工具带进车间</strong> —— 用脚本把重复劳动变成可复用的小工具</li>
+				<li><strong>跨界学习笔记</strong> —— 软件工程理念与制造业实践之间的启发与对照</li>
+			</ul>
+			<p>
+				如果你也身处传统行业、在用笨办法解决聪明问题，欢迎在
+				<a
+					class="cactus-link transition-colors duration-200 hover:text-[#2bbc8a]"
+					href="https://github.com/t1kcode"
+					rel="noreferrer"
+					target="_blank">这里</a
+				>
+				找到我，一起交流。
+			</p>
+		</section>
 	</div>
 </PageLayout>
