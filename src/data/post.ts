@@ -7,6 +7,20 @@ export async function getAllPosts(): Promise<CollectionEntry<"post">[]> {
 	});
 }
 
+/** 过滤掉"封档"分类的文章（显示在主页和文章列表时用） */
+export function excludeArchived(posts: CollectionEntry<"post">[]): CollectionEntry<"post">[] {
+	return posts.filter(
+		(post) => !post.data.categories.includes("封档")
+	);
+}
+
+/** 只取"封档"分类的文章（封档页面用） */
+export function filterArchived(posts: CollectionEntry<"post">[]): CollectionEntry<"post">[] {
+	return posts.filter(
+		(post) => post.data.categories.includes("封档")
+	);
+}
+
 /** Get tag metadata by tag name */
 export async function getTagMeta(tag: string): Promise<CollectionEntry<"tag"> | undefined> {
 	const tagEntries = await getCollection("tag", (entry) => {

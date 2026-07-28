@@ -126,6 +126,11 @@
 	.title {
 		@apply text-accent-2 text-2xl font-semibold;
 	}
+
+	.masthead_title {
+		@apply text-accent-2 text-2xl font-bold;
+		color: #2bbc8a;
+	}
 }
 
 @utility prose {

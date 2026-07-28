@@ -3,15 +3,16 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import PostPreview from "@/components/blog/PostPreview.astro";
 import Note from "@/components/note/Note.astro";
 import SocialList from "@/components/SocialList.astro";
-import { getAllPosts } from "@/data/post";
+import { getAllPosts, excludeArchived } from "@/data/post";
 import PageLayout from "@/layouts/Base.astro";
 import { collectionDateSort } from "@/utils/date";
 import { PinnedPosts } from "@/site.config";
-
+import FormattedDate from "@/components/FormattedDate.astro";
 // Posts
 const MAX_POSTS = 3;
 const allPosts = await getAllPosts();
-const allPostsByDate = allPosts.sort(collectionDateSort) as CollectionEntry<"post">[];
+const visiblePosts = excludeArchived(allPosts); // 过滤封档
+const allPostsByDate = visiblePosts.sort(collectionDateSort) as CollectionEntry<"post">[];
 const latestPosts = allPostsByDate.slice(0, MAX_POSTS);
 
 // Pinned Posts, set to a max of 3;
@@ -28,7 +29,44 @@ const allNotes = await getCollection("note");
 const latestNotes = allNotes
 	.sort(collectionDateSort)
 	.slice(0, MAX_NOTES) as CollectionEntry<"note">[];
+
+// === 新增：按日期分组最新文章 ===
+function groupByDate(posts: CollectionEntry<"post">[]) {
+	const groups: { date: Date; posts: CollectionEntry<"post">[] }[] = [];
+	for (const p of posts.filter((p) => !p.data.pinned)) {
+		const last = groups[groups.length - 1];
+		// 同一天的文章归入一组（比较年月日）
+		if (last && last.date.toDateString() === p.data.publishDate.toDateString()) {
+			last.posts.push(p);
+		} else {
+			groups.push({ date: p.data.publishDate, posts: [p] });
+		}
+	}
+	return groups;
+}
+
+const latestGroups = groupByDate(latestPosts);
 ---
+
+<style>
+	@keyframes group-in {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.post-group {
+		animation: group-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+		transition:
+			background-color 0.2s ease-out,
+			border-color 0.2s ease-out;
+	}
+</style>
 
 <PageLayout meta={{ title: "Home" }}>
 	<section>
@@ -37,10 +75,13 @@ const latestNotes = allNotes
 	{
 		pinnedPosts.length > 0 && (
 			<section class="mt-8">
-				<h2 class="title mb-6 text-xl">{PinnedPosts}</h2>
-				<ul class="space-y-4" role="list">
-					{pinnedPosts.map((p) => (
-						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
+				<h2 class="title text-accent mb-6 text-xl">{PinnedPosts}</h2>
+				<ul class="space-y-3" role="list">
+					{pinnedPosts.map((p, i) => (
+						<li
+							class="post-group rounded-lg border border-transparent px-3 py-2 transition-colors duration-200 hover:border-[#2bbc8a]/15 hover:bg-[#2bbc8a]/[0.03] sm:grid sm:grid-cols-[auto_1fr] sm:gap-2"
+							style={`animation-delay: ${i * 0.06}s`}
+						>
 							<PostPreview post={p} />
 						</li>
 					))}
@@ -50,11 +91,33 @@ const latestNotes = allNotes
 	}
 	<section class={pinnedPosts.length > 0 ? "mt-16" : "mt-8"}>
 		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">最新文章</a></h2>
-		<ul class="space-y-4" role="list">
+		<ul class="space-y-3" role="list">
 			{
-				latestPosts.map((p) => (
-					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-						<PostPreview post={p} />
+				latestGroups.map((group, gi) => (
+					<li
+						class="post-group rounded-lg border border-transparent px-3 py-2 transition-colors duration-200 hover:border-[#2bbc8a]/15 hover:bg-[#2bbc8a]/[0.03] sm:grid sm:grid-cols-[auto_1fr] sm:gap-2"
+						style={`animation-delay: ${gi * 0.06}s`}
+					>
+						<FormattedDate
+							class="text-muted min-w-30 pt-0.5 text-sm font-semibold tabular-nums"
+							date={group.date}
+						/>
+						<div class="flex flex-wrap items-baseline gap-x-1.5">
+							{group.posts.map((p, i) => (
+								<>
+									<a
+										class="cactus-link transition-colors duration-200 hover:text-[#2bbc8a]"
+										href={`/posts/${p.id}/`}
+									>
+										{p.data.draft && <span class="text-red-500">(Draft) </span>}
+										{p.data.title}
+									</a>
+									{i < group.posts.length - 1 && (
+										<span class="text-muted/40 text-xs select-none">│</span>
+									)}
+								</>
+							))}
+						</div>
 					</li>
 				))
 			}

@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import PostPreview from "@/components/blog/PostPreview.astro";
+import Pagination from "@/components/Paginator.astro";
+import { getAllPosts, filterArchived, groupPostsByYear } from "@/data/post";
+import PageLayout from "@/layouts/Base.astro";
+import { collectionDateSort } from "@/utils/date";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const allPosts = await getAllPosts();
+	const archivedPosts = filterArchived(allPosts).sort(collectionDateSort);
+	return paginate(archivedPosts, {
+		pageSize: 7, // 定义封档页面一页的文章数
+	});
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"post">>;
+}
+
+const { page } = Astro.props;
+
+const groupedByYear = groupPostsByYear(page.data);
+const descYearKeys = Object.keys(groupedByYear).sort((a, b) => +b - +a);
+
+const meta = {
+	description: "封档文章列表",
+	title: "封档",
+};
+
+const paginationProps = {
+	...(page.url.prev && {
+		prevUrl: {
+			text: "← Previous Page",
+			url: page.url.prev,
+		},
+	}),
+	...(page.url.next && {
+		nextUrl: {
+			text: "Next Page →",
+			url: page.url.next,
+		},
+	}),
+};
+---
+
+<PageLayout {meta}>
+	<div class="space-y-16">
+		{
+			descYearKeys.map((yearKey) => (
+				<section>
+					<h2 id={`year-${yearKey}`} class="title text-lg">
+						<span class="sr-only">Posts in</span>
+						{yearKey}
+					</h2>
+					<ul class="mt-5 space-y-4 text-start">
+						{groupedByYear[yearKey]?.map((p) => (
+							<li class="grid gap-1 sm:grid-cols-[auto_1fr] sm:[&_q]:col-start-2">
+								<PostPreview post={p} />
+							</li>
+						))}
+					</ul>
+				</section>
+			))
+		}
+	</div>
+	<Pagination {...paginationProps} />
+</PageLayout>

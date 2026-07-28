@@ -67,8 +67,8 @@ export default {
 						"h1::before, h3::before, h4::before, h5::before, h6::before": {
 							content: "none !important", // 移除其他标题前的 # 号
 						},
-						"h1, h1 a": {
-							color: "#2bbc8a !important", 
+						".prose > h1:first-child": {
+							display: "none",
 						},
 						code: {
 							border: "1px dotted #666",

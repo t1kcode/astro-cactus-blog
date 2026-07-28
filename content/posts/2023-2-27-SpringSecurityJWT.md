@@ -722,7 +722,7 @@ public class User implements Serializable {
 
 ###### 准备工作
 
-```mysql
+```sql
 CREATE TABLE `sys_user` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_name` VARCHAR(64) NOT NULL DEFAULT 'NULL' COMMENT '用户名',
@@ -1248,7 +1248,7 @@ public class LoginUser implements UserDetails
 
 ###### 准备工作
 
-```mysql
+```sql
 DROP TABLE IF EXISTS `sys_menu`;
 
 CREATE TABLE `sys_menu` (
@@ -1331,7 +1331,7 @@ CREATE TABLE `sys_user_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-```mysql
+```sql
 SELECT
     DISTINCT t4.perms
 FROM

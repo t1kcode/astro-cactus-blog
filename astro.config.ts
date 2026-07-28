@@ -25,9 +25,6 @@ export default defineConfig({
 	image: {
 		domains: ["webmention.io"],
 	},
-	redirects:{
-		'/posts/:slug': '/:year/:month/:day/:slug',
-	},
 	integrations: [
 		expressiveCode(expressiveCodeOptions),
 		icon(),

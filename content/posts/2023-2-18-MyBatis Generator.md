@@ -386,7 +386,7 @@ public class UmsAdminServiceImpl implements UmsAdminService
 
 - **这里以用户名和状态查询后台用户并按创建时间降序排序为例，SQL实现如下**
 
-```mysql
+```sql
 SELECT
 	id,
 	username,
@@ -487,7 +487,7 @@ public interface MyUmsAdminMapper
 
 - **这里以按用户名删除后台用户为例，SQL实现如下**
 
-```mysql
+```sql
 delete from ums_admin where username = 'test'
 ```
 
@@ -511,7 +511,7 @@ public void deleteByUsername(String username)
 
 - **这里以按指定id修改后台用户的状态为例，SQL实现如下**
 
-```mysql
+```sql
 update ums_admin set status = 1 where id in (1, 2)
 ```
 

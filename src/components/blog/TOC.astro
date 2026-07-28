@@ -12,10 +12,36 @@ const { headings } = Astro.props;
 const toc = generateToc(headings);
 ---
 
-<details open class="lg:sticky lg:top-12 lg:order-2 lg:-me-32 lg:basis-64">
-	<summary class="title hover:marker:text-accent cursor-pointer text-lg">Table of Contents</summary>
-	<nav class="ms-4 lg:w-full">
-		<ol class="mt-4">
+<details open class="group lg:sticky lg:top-12 lg:order-2 lg:-me-32 lg:basis-64">
+	<summary
+		class="text-accent-2 hover:text-accent flex cursor-pointer items-center gap-2 text-lg font-semibold transition-colors duration-200"
+	>
+		<svg
+			class="text-muted group-open:text-accent h-5 w-5 shrink-0"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="currentColor"
+			aria-hidden="true"
+		>
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M4 6h16M4 12h16M4 18h16"></path>
+		</svg>
+		<span>Table of Contents</span>
+		<svg
+			class="text-muted h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-90"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="currentColor"
+			aria-hidden="true"
+		>
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+		</svg>
+	</summary>
+	<nav class="ms-6 mt-4 lg:w-full">
+		<ol class="border-muted/20 space-y-1 border-l-2 pl-4">
 			{toc.map((heading) => <TOCHeading heading={heading} />)}
 		</ol>
 	</nav>
