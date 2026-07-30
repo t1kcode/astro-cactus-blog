@@ -1,7 +1,7 @@
 ---
 import type { MarkdownHeading } from "astro";
 import { generateToc } from "@/utils/generateToc";
-import TOCHeading from "./TOCHeading.astro";
+import TOCHeading from "@/components/blog/TOCHeading.astro";
 
 interface Props {
 	headings: MarkdownHeading[];
@@ -12,7 +12,12 @@ const { headings } = Astro.props;
 const toc = generateToc(headings);
 ---
 
-<details open class="group lg:sticky lg:top-12 lg:order-2 lg:-me-32 lg:basis-64">
+{/* ============ 桌面端：sticky 目录树（保持原样） ============ */}
+<details
+	open
+	class="group hidden lg:sticky lg:top-12 lg:order-2 lg:-me-32 lg:block lg:max-h-[calc(100vh-7rem)] lg:basis-64 lg:overflow-hidden"
+	id="toc-desktop"
+>
 	<summary
 		class="text-accent-2 hover:text-accent flex cursor-pointer items-center gap-2 text-lg font-semibold transition-colors duration-200"
 	>
@@ -40,9 +45,252 @@ const toc = generateToc(headings);
 			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
 		</svg>
 	</summary>
-	<nav class="ms-6 mt-4 lg:w-full">
+	<nav
+		id="toc-nav-desktop"
+		class="toc-scroll ms-6 mt-4 lg:max-h-[calc(100vh-12rem)] lg:w-full lg:overflow-y-auto lg:pe-2"
+	>
 		<ol class="border-muted/20 space-y-1 border-l-2 pl-4">
 			{toc.map((heading) => <TOCHeading heading={heading} />)}
 		</ol>
 	</nav>
 </details>
+
+{/* ============ 手机端：浮动按钮 ============ */}
+<button id="toc-fab" type="button" aria-label="打开目录" class="toc-fab lg:hidden">
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		class="h-5 w-5"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke="currentColor"
+		stroke-width="2"
+		aria-hidden="true"
+	>
+		<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"></path>
+	</svg>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		class="toc-fab-badge absolute -end-1 -top-1 h-4 w-4"
+		fill="#2bbc8a"
+		viewBox="0 0 24 24"
+		aria-hidden="true"
+	>
+		<circle cx="12" cy="12" r="10"></circle>
+	</svg>
+</button>
+
+{/* ============ 手机端：底部抽屉 ============ */}
+<div id="toc-sheet" class="toc-sheet lg:hidden" aria-hidden="true">
+	{/* 遮罩 */}
+	<button type="button" class="toc-sheet-scrim" aria-label="关闭目录" data-toc-close tabindex="-1"
+	></button>
+
+	{/* 抽屉面板 */}
+	<div class="toc-sheet-panel" role="dialog" aria-modal="true" aria-label="文章目录">
+		{/* 拖拽指示条 */}
+		<div class="toc-sheet-grip" aria-hidden="true"></div>
+
+		{/* 头部 */}
+		<div class="toc-sheet-header">
+			<span class="toc-sheet-title">目录</span>
+			<button type="button" class="toc-sheet-close" aria-label="关闭目录" data-toc-close>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					stroke-width="2"
+					aria-hidden="true"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
+
+		{/* 目录列表（手机端这一份的 id 带 -mobile 后缀） */}
+		<nav id="toc-nav-mobile" class="toc-sheet-body toc-scroll">
+			<ol class="border-muted/20 space-y-1 border-l-2 pl-4">
+				{toc.map((heading) => <TOCHeading heading={heading} />)}
+			</ol>
+		</nav>
+	</div>
+</div>
+
+<script>
+	// ===== TOC Scroll-Spy =====
+	// 同时管理桌面端和手机端两份目录的激活/已读状态。
+	function setupTocScrollSpy() {
+		// 收集两份目录的所有链接（保持文档顺序）
+		const desktopNav = document.getElementById("toc-nav-desktop");
+		const mobileNav = document.getElementById("toc-nav-mobile");
+		const navs = [desktopNav, mobileNav].filter(Boolean) as HTMLElement[];
+
+		if (navs.length === 0) return;
+
+		// 取任一份的链接作为"权威列表"（两份内容相同）
+		const primaryLinks = Array.from(navs[0].querySelectorAll<HTMLAnchorElement>("a[href^='#']"));
+		if (primaryLinks.length === 0) return;
+
+		// 每份 nav 内的链接集合，用于同步状态
+		const allLinks = navs.map((n) =>
+			Array.from(n.querySelectorAll<HTMLAnchorElement>("a[href^='#']")),
+		);
+
+		// 对应正文标题
+		const headings = primaryLinks
+			.map((a) => {
+				const id = decodeURIComponent(a.getAttribute("href")?.slice(1) ?? "");
+				return id ? document.getElementById(id) : null;
+			})
+			.filter((el): el is HTMLElement => el !== null);
+
+		if (headings.length === 0) return;
+
+		const TOP_OFFSET = 100;
+		let maxReadIndex = -1;
+
+		function update() {
+			const scrollY = window.scrollY;
+			let activeIdx = 0;
+			for (let i = 0; i < headings.length; i++) {
+				const top = headings[i].getBoundingClientRect().top + scrollY;
+				if (top - TOP_OFFSET <= scrollY) {
+					activeIdx = i;
+				} else {
+					break;
+				}
+			}
+
+			maxReadIndex = Math.max(maxReadIndex, activeIdx);
+
+			// 同步每份 nav 的链接状态
+			for (const links of allLinks) {
+				if (links.length === 0) continue;
+				links.forEach((link, i) => {
+					link.classList.remove("toc-active", "toc-read");
+					if (i === activeIdx) {
+						link.classList.add("toc-active");
+					} else if (i < maxReadIndex) {
+						link.classList.add("toc-read");
+					}
+				});
+
+				// 滚动激活项到该 nav 可视区内（仅对可滚动 nav 生效）
+				const nav = links[activeIdx]?.closest("nav");
+				const activeLink = links[activeIdx];
+				if (nav && activeLink && nav.scrollHeight > nav.clientHeight) {
+					const navRect = nav.getBoundingClientRect();
+					const linkRect = activeLink.getBoundingClientRect();
+					const visible = linkRect.top >= navRect.top && linkRect.bottom <= navRect.bottom;
+					if (!visible) {
+						nav.scrollTo({
+							top: activeLink.offsetTop - nav.clientHeight / 2 + activeLink.clientHeight / 2,
+							behavior: "smooth",
+						});
+					}
+				}
+			}
+		}
+
+		let ticking = false;
+		function onScroll() {
+			if (ticking) return;
+			ticking = true;
+			requestAnimationFrame(() => {
+				update();
+				ticking = false;
+			});
+		}
+
+		window.addEventListener("scroll", onScroll, { passive: true });
+		window.addEventListener("resize", onScroll, { passive: true });
+		window.addEventListener("hashchange", update);
+
+		// 初次刷新
+		update();
+	}
+
+	// ===== 手机端抽屉开/关 =====
+	function setupTocSheet() {
+		const fab = document.getElementById("toc-fab");
+		const sheet = document.getElementById("toc-sheet");
+		if (!fab || !sheet) return;
+
+		const panel = sheet.querySelector<HTMLElement>(".toc-sheet-panel");
+		const scrim = sheet.querySelector<HTMLElement>(".toc-sheet-scrim");
+		const closeBtns = sheet.querySelectorAll<HTMLElement>("[data-toc-close]");
+		const mobileLinks = sheet.querySelectorAll<HTMLAnchorElement>("a[href^='#']");
+
+		let isOpen = false;
+
+		function open() {
+			isOpen = true;
+			sheet.setAttribute("aria-hidden", "false");
+			sheet.classList.add("toc-sheet-open");
+			document.body.classList.add("toc-body-lock");
+			// 聚焦到关闭按钮，方便键盘用户
+			closeBtns[0]?.focus();
+		}
+
+		function close() {
+			isOpen = false;
+			sheet.setAttribute("aria-hidden", "true");
+			sheet.classList.remove("toc-sheet-open");
+			document.body.classList.remove("toc-body-lock");
+		}
+
+		fab.addEventListener("click", open);
+		closeBtns.forEach((b) => b.addEventListener("click", close));
+
+		// 点击目录链接后自动关闭抽屉
+		mobileLinks.forEach((a) => a.addEventListener("click", () => close()));
+
+		// ESC 键关闭
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape" && isOpen) close();
+		});
+
+		// 简易上滑关闭手势：手指按下后上滑超过 80px 就关闭
+		let startY: number | null = null;
+		panel?.addEventListener(
+			"touchstart",
+			(e) => {
+				startY = e.touches[0].clientY;
+			},
+			{ passive: true },
+		);
+		panel?.addEventListener(
+			"touchmove",
+			(e) => {
+				if (startY === null) return;
+				const delta = e.touches[0].clientY - startY;
+				if (delta < -80) {
+					close();
+					startY = null;
+				}
+			},
+			{ passive: true },
+		);
+		panel?.addEventListener(
+			"touchend",
+			() => {
+				startY = null;
+			},
+			{ passive: true },
+		);
+	}
+
+	// ===== 初始化（兼容 view transitions） =====
+	function initAll() {
+		setupTocScrollSpy();
+		setupTocSheet();
+	}
+
+	document.addEventListener("astro:page-load", initAll);
+	if (document.readyState !== "loading") {
+		initAll();
+	} else {
+		document.addEventListener("DOMContentLoaded", initAll);
+	}
+</script>

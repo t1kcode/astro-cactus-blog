@@ -20,10 +20,7 @@ const { Content } = await render(note);
 	<Tag class="title" class:list={{ "text-base": isPreview }}>
 		{
 			isPreview ? (
-				<a
-					class="cactus-link transition-colors duration-200 hover:text-[#2bbc8a]"
-					href={`/notes/${note.id}/`}
-				>
+				<a class="cactus-link hover-accent-link" href={`/notes/${note.id}/`}>
 					<span class="text-red-500" />
 					{note.data.title}
 				</a>

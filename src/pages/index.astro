@@ -105,10 +105,7 @@ const latestGroups = groupByDate(latestPosts);
 						<div class="flex flex-wrap items-baseline gap-x-1.5">
 							{group.posts.map((p, i) => (
 								<>
-									<a
-										class="cactus-link transition-colors duration-200 hover:text-[#2bbc8a]"
-										href={`/posts/${p.id}/`}
-									>
+									<a class="cactus-link hover-accent-link" href={`/posts/${p.id}/`}>
 										{p.data.draft && <span class="text-red-500">(Draft) </span>}
 										{p.data.title}
 									</a>

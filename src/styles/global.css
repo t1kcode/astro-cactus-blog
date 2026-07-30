@@ -131,6 +131,189 @@
 		@apply text-accent-2 text-2xl font-bold;
 		color: #2bbc8a;
 	}
+	/* 新增：统一的标题悬停变色（仅在支持 hover 的设备生效，避免手机端 sticky hover） */
+	.hover-accent-link {
+		transition: color 0.2s ease-out;
+		@media (hover: hover) {
+			&:hover {
+				color: #2bbc8a;
+			}
+		}
+	}
+	.toc-scroll {
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-muted) transparent;
+	}
+	.lg\:overflow-y-auto::-webkit-scrollbar {
+		width: 4px;
+	}
+	.lg\:overflow-y-auto::-webkit-scrollbar-thumb {
+		background-color: var(--color-muted);
+		border-radius: 2px;
+	}
+	/* === TOC Scroll-Spy 状态 === */
+
+	/* 已读：用更柔和的图标色，弱化但仍可辨 */
+	.toc-read {
+		color: var(--color-muted) !important;
+		opacity: 0.7;
+	}
+
+	/* 当前激活：高亮成主题强调色（仙人掌绿），并加粗指示 */
+	.toc-active {
+		color: #2bbc8a !important;
+		font-weight: 600;
+		position: relative;
+	}
+	.toc-active::before {
+		content: "";
+		position: absolute;
+		left: -1.25rem;
+		top: 0.25rem;
+		bottom: 0.25rem;
+		width: 2px;
+		border-radius: 1px;
+		background: #2bbc8a;
+	}
+	/* === 手机端 TOC 浮动按钮 + 底部抽屉 === */
+
+	/* 浮动按钮：位于 to-top-btn 上方，错开不重叠 */
+	.toc-fab {
+		position: fixed;
+		end: 1rem; /* end-4 */
+		bottom: 5rem; /* bottom-20 = 80px，在 to-top-btn(bottom-8=32px) 上方 */
+		z-index: 60;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem; /* 44px，满足 ≥44pt 触控目标 */
+		height: 2.75rem;
+		border-radius: 9999px;
+		border: 2px solid transparent;
+		background: var(--color-global-text);
+		color: var(--color-global-bg);
+		cursor: pointer;
+		transition:
+			transform 0.2s ease-out,
+			opacity 0.2s ease-out;
+	}
+	.toc-fab:active {
+		transform: scale(0.92);
+	}
+	.toc-fab-badge {
+		display: block;
+		border-radius: 9999px;
+		border: 2px solid var(--color-global-bg);
+	}
+
+	/* 抽屉容器：默认隐藏 */
+	.toc-sheet {
+		position: fixed;
+		inset: 0;
+		z-index: 80;
+		display: none;
+	}
+	.toc-sheet.toc-sheet-open {
+		display: block;
+	}
+
+	/* 遮罩（scrim 50% 黑，符合 40-60% 规则） */
+	.toc-sheet-scrim {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		border: none;
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 0.25s ease-out;
+	}
+	.toc-sheet-open .toc-sheet-scrim {
+		opacity: 1;
+	}
+
+	/* 抽屉面板 */
+	.toc-sheet-panel {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		max-height: 60vh;
+		background: var(--color-global-bg);
+		border-top-left-radius: 1rem;
+		border-top-right-radius: 1rem;
+		box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.25);
+		transform: translateY(100%);
+		transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	.toc-sheet-open .toc-sheet-panel {
+		transform: translateY(0);
+	}
+
+	/* 拖拽指示条 */
+	.toc-sheet-grip {
+		flex: none;
+		width: 2.5rem;
+		height: 0.25rem;
+		border-radius: 9999px;
+		background: var(--color-muted);
+		margin: 0.625rem auto 0.25rem;
+	}
+
+	/* 抽屉头部 */
+	.toc-sheet-header {
+		flex: none;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.5rem 1rem 0.75rem;
+	}
+	.toc-sheet-title {
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--color-accent-2);
+	}
+	.toc-sheet-close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem; /* 36px，加 padding 达到 ≥44pt */
+		height: 2.25rem;
+		border-radius: 9999px;
+		color: var(--color-muted);
+		cursor: pointer;
+		transition: color 0.2s ease-out;
+	}
+	.toc-sheet-close:active {
+		color: var(--color-accent);
+	}
+
+	/* 抽屉体：可独立滚动 */
+	.toc-sheet-body {
+		flex: 1 1 auto;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		padding: 0 1rem 1.25rem 1.5rem;
+		max-height: calc(60vh - 4rem);
+	}
+
+	/* body 滚动锁定（抽屉打开时） */
+	.toc-body-lock {
+		overflow: hidden;
+	}
+
+	/* === reduced-motion 降级 === */
+	@media (prefers-reduced-motion: reduce) {
+		.toc-fab,
+		.toc-sheet-scrim,
+		.toc-sheet-panel {
+			transition: none !important;
+		}
+	}
 }
 
 @utility prose {
