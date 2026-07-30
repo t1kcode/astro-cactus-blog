@@ -314,6 +314,20 @@
 			transition: none !important;
 		}
 	}
+	/* 手机端触摸反馈：按下瞬间变色，不留 sticky hover */
+	.hover-accent-link {
+		/* 原有 transition 仅作用于 hover: hover 设备 */
+		transition: color 0.2s ease-out;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	/* 触摸按下时即时变色（150ms 内完成跳转，体验自然） */
+	@media (hover: none) {
+		.hover-accent-link:active {
+			color: #2bbc8a;
+			transition: color 0.05s ease-out;
+		}
+	}
 }
 
 @utility prose {

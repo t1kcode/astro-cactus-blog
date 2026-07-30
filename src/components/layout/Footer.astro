@@ -2,6 +2,7 @@
 import { menuLinks, siteConfig } from "@/site.config";
 
 const year = new Date().getFullYear();
+const footerLinks = menuLinks.filter((link) => link.inFooter !== false);
 ---
 
 <footer
@@ -11,9 +12,12 @@ const year = new Date().getFullYear();
 		&copy;{year}
 		<span class="inline-block">&nbsp;{siteConfig.title}&nbsp;</span>
 	</div>
-	<nav aria-label="Footer" class="sm:divide-muted flex gap-x-2 sm:gap-x-0 sm:divide-x">
+	<nav
+		aria-label="Footer"
+		class="sm:divide-muted flex flex-wrap justify-center gap-x-2 sm:gap-x-0 sm:divide-x"
+	>
 		{
-			menuLinks.map((link) => (
+			footerLinks.map((link) => (
 				<a class="hover:text-global-text px-4 py-2 hover:underline sm:py-0" href={link.path}>
 					{link.title}
 				</a>

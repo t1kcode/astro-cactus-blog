@@ -31,7 +31,6 @@ export const siteConfig: SiteConfig = {
 		},
 	},
 };
-
 export const menu: string = "主页";
 export const posts: string = "文章";
 export const notes: string = "随记";
@@ -39,29 +38,33 @@ export const archive: string = "封档";
 export const about: string = "关于";
 export const PinnedPosts: string = "置顶文章";
 // 用于在页眉（Header）和页脚（Footer）中生成链接。
-export const menuLinks: { path: string; title: string }[] = [
+export const menuLinks: { path: string; title: string; inFooter?: boolean}[] = [
 	{
 		path: "/",
 		title: menu,
+		inFooter: true,
 	},
 
 	{
 		path: "/posts/",
 		title: posts,
+		inFooter: true,
 	},
 	{
 		path: "/notes/",
 		title: notes,
-		
+		inFooter: true,
 	},
 	// 新增封档入口
 	{
 		path: "/archived/",
 		title: archive,
+		inFooter: true,
 	},
 	{
 		path: "/about/",
 		title: about,
+		inFooter: false,
 	},
 ];
 
