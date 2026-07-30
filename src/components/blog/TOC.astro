@@ -124,12 +124,14 @@ const toc = generateToc(headings);
 		// 收集两份目录的所有链接（保持文档顺序）
 		const desktopNav = document.getElementById("toc-nav-desktop");
 		const mobileNav = document.getElementById("toc-nav-mobile");
-		const navs = [desktopNav, mobileNav].filter(Boolean) as HTMLElement[];
+		const navs = [desktopNav, mobileNav].filter((el): el is HTMLElement => el !== null);
 
 		if (navs.length === 0) return;
 
 		// 取任一份的链接作为"权威列表"（两份内容相同）
-		const primaryLinks = Array.from(navs[0].querySelectorAll<HTMLAnchorElement>("a[href^='#']"));
+		const primaryNav = navs[0];
+		if (!primaryNav) return;
+		const primaryLinks = Array.from(primaryNav.querySelectorAll<HTMLAnchorElement>("a[href^='#']"));
 		if (primaryLinks.length === 0) return;
 
 		// 每份 nav 内的链接集合，用于同步状态
@@ -154,7 +156,9 @@ const toc = generateToc(headings);
 			const scrollY = window.scrollY;
 			let activeIdx = 0;
 			for (let i = 0; i < headings.length; i++) {
-				const top = headings[i].getBoundingClientRect().top + scrollY;
+				const heading = headings[i];
+				if (!heading) continue;
+				const top = heading.getBoundingClientRect().top + scrollY;
 				if (top - TOP_OFFSET <= scrollY) {
 					activeIdx = i;
 				} else {
@@ -177,9 +181,10 @@ const toc = generateToc(headings);
 				});
 
 				// 滚动激活项到该 nav 可视区内（仅对可滚动 nav 生效）
-				const nav = links[activeIdx]?.closest("nav");
 				const activeLink = links[activeIdx];
-				if (nav && activeLink && nav.scrollHeight > nav.clientHeight) {
+				if (!activeLink) continue;
+				const nav = activeLink.closest("nav");
+				if (nav && nav.scrollHeight > nav.clientHeight) {
 					const navRect = nav.getBoundingClientRect();
 					const linkRect = activeLink.getBoundingClientRect();
 					const visible = linkRect.top >= navRect.top && linkRect.bottom <= navRect.bottom;
@@ -214,11 +219,10 @@ const toc = generateToc(headings);
 	// ===== 手机端抽屉开/关 =====
 	function setupTocSheet() {
 		const fab = document.getElementById("toc-fab");
-		const sheet = document.getElementById("toc-sheet");
-		if (!fab || !sheet) return;
+		const sheetEl = document.getElementById("toc-sheet");
+		if (!fab || !sheetEl) return;
+		const sheet: HTMLElement = sheetEl;
 
-		const panel = sheet.querySelector<HTMLElement>(".toc-sheet-panel");
-		const scrim = sheet.querySelector<HTMLElement>(".toc-sheet-scrim");
 		const closeBtns = sheet.querySelectorAll<HTMLElement>("[data-toc-close]");
 		const mobileLinks = sheet.querySelectorAll<HTMLAnchorElement>("a[href^='#']");
 
@@ -230,7 +234,8 @@ const toc = generateToc(headings);
 			sheet.classList.add("toc-sheet-open");
 			document.body.classList.add("toc-body-lock");
 			// 聚焦到关闭按钮，方便键盘用户
-			closeBtns[0]?.focus();
+			const firstClose = closeBtns[0];
+			if (firstClose) firstClose.focus();
 		}
 
 		function close() {
@@ -250,35 +255,6 @@ const toc = generateToc(headings);
 		document.addEventListener("keydown", (e) => {
 			if (e.key === "Escape" && isOpen) close();
 		});
-
-		// 简易上滑关闭手势：手指按下后上滑超过 80px 就关闭
-		let startY: number | null = null;
-		panel?.addEventListener(
-			"touchstart",
-			(e) => {
-				startY = e.touches[0].clientY;
-			},
-			{ passive: true },
-		);
-		panel?.addEventListener(
-			"touchmove",
-			(e) => {
-				if (startY === null) return;
-				const delta = e.touches[0].clientY - startY;
-				if (delta < -80) {
-					close();
-					startY = null;
-				}
-			},
-			{ passive: true },
-		);
-		panel?.addEventListener(
-			"touchend",
-			() => {
-				startY = null;
-			},
-			{ passive: true },
-		);
 	}
 
 	// ===== 初始化（兼容 view transitions） =====
