@@ -328,6 +328,19 @@
 			transition: color 0.05s ease-out;
 		}
 	}
+	/* === 居中表格（覆盖 prose 内的 block 化表格） === */
+	.prose .table-center {
+		display: flex;
+		justify-content: center;
+		margin-block: calc(var(--spacing) * 2);
+	}
+	.prose .table-center table {
+		display: table !important; /* 强制覆盖 typography 插件的 block */
+		overflow-x: visible !important;
+		max-width: none !important;
+		margin: 0 !important; /* 去掉 prose 表格的上下 margin */
+		white-space: normal !important; /* 关掉 nowrap */
+	}
 }
 
 @utility prose {

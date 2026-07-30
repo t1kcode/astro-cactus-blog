@@ -101,19 +101,34 @@ export default {
 								},
 							},
 						},
-						/* Table */
-						"tbody tr": {
-							borderBottomWidth: "none",
+												/* Table —— 让表格可见并可横向滚动 */
+						table: {
+							display: "block",
+							overflowX: "auto",
+							whiteSpace: "nowrap",
+							maxWidth: "100%",
+							WebkitOverflowScrolling: "touch",
+							borderCollapse: "collapse",
+							marginTop: "calc(var(--spacing)*2)",
+							marginBottom: "calc(var(--spacing)*2)",
 						},
-						tfoot: {
-							borderTop: "1px dashed #666",
+						"thead th, tbody td": {
+							padding: "0.5rem 0.75rem",
+							textAlign: "left",
+							whiteSpace: "normal",
+							verticalAlign: "top",
 						},
-						thead: {
-							borderBottomWidth: "none",
+						"tbody td": {
+							borderTop: "1px dashed var(--tw-prose-hr)",
 						},
 						"thead th": {
 							borderBottom: "1px dashed #666",
+							borderTop: "none",
 							fontWeight: "700",
+							color: "#2bbc8a",
+						},
+						tfoot: {
+							borderTop: "1px dashed #666",
 						},
 						'th[align="center"], td[align="center"]': {
 							"text-align": "center",
@@ -123,6 +138,13 @@ export default {
 						},
 						'th[align="left"], td[align="left"]': {
 							"text-align": "left",
+						},
+						/* tr:hover 行高亮 */
+						"tbody tr": {
+							transition: "background-color 0.15s ease-out",
+						},
+						"tbody tr:hover": {
+							backgroundColor: "rgba(43, 188, 138, 0.06)",
 						},
 						".expressive-code, .admonition, .github-card": {
 							marginTop: "calc(var(--spacing)*4)",

@@ -9,7 +9,7 @@ import { collectionDateSort } from "@/utils/date";
 import { PinnedPosts } from "@/site.config";
 import FormattedDate from "@/components/FormattedDate.astro";
 // Posts
-const MAX_POSTS = 3;
+const MAX_POSTS = 6;
 const allPosts = await getAllPosts();
 const visiblePosts = excludeArchived(allPosts); // 过滤封档
 const allPostsByDate = visiblePosts.sort(collectionDateSort) as CollectionEntry<"post">[];
